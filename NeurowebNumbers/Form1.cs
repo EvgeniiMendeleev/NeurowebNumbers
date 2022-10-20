@@ -12,10 +12,15 @@ namespace NeurowebNumbers
 {
     public partial class Form1 : Form
     {
+        private Neuron neuron = new Neuron(5);
+
         public Form1()
         {
             InitializeComponent();
         }
 
+        public void DivineNumber(object sender, EventArgs e)
+        {
+        }
     }
 }

@@ -8,17 +8,20 @@ namespace NeurowebNumbers
 {
     class Neuron
     {
-        public delegate double ActivationFunc(double value);
-
+        private readonly double _limit;
         private List<double> _inputs;
         private List<double> _weights = new List<double>();
-        public ActivationFunc func;
         
-        public Neuron(List<double> inputs)
+        public Neuron(double limit)
         {
-            _inputs = inputs;
+            _limit = limit;
+        }
+
+        public void SaveInputs(List<double> inputs)
+        {
             Random rnd = new();
-            _inputs.ForEach(input => _weights.Add(rnd.NextDouble()));
+            _inputs = inputs;
+            for (int i = 0; i < _inputs.Count; i++) _weights.Add(rnd.NextDouble());
         }
 
         public double Summator()
@@ -31,9 +34,14 @@ namespace NeurowebNumbers
             return sum;
         }
 
-        public void FeedForward(double )
+        public bool ActivationFunction(double signal)
         {
-            
+            return signal >= _limit;
+        }
+
+        public void FeedForward(double errorValue)
+        {
+            for (int i = 0; i < _inputs.Count; i++) _weights[i] = _weights[i] + errorValue * _inputs[i];
         }
     }
 }
