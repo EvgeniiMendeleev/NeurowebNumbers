@@ -19,6 +19,19 @@ namespace NeurowebNumbers
             InitializeComponent();
         }
 
+        public void LoadPicture(object sender, EventArgs e)
+        {
+            using (OpenFileDialog opf = new OpenFileDialog())
+            {
+                opf.Title = "Выбрать картинку";
+                opf.Filter = "bmp files (*.bmp)|*.bmp";
+                if (opf.ShowDialog() == DialogResult.Cancel) return;
+                Bitmap originalPicture = new Bitmap(opf.FileName);
+                Bitmap picture = new Bitmap(Image.FromHbitmap(originalPicture.GetHbitmap()), pictureBox.Width, pictureBox.Height);
+                pictureBox.Image = picture;
+            }
+        }
+
         public void DivineNumber(object sender, EventArgs e)
         {
         }
