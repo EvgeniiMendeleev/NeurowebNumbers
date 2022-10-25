@@ -31,9 +31,8 @@ namespace NeurowebNumbers
         {
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.resultBox = new System.Windows.Forms.TextBox();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,42 +54,31 @@ namespace NeurowebNumbers
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.LoadPicture);
             // 
-            // button2
+            // resultBox
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(146, 53);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(252, 29);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Верно";
-            this.button2.UseVisualStyleBackColor = true;
+            this.resultBox.Location = new System.Drawing.Point(147, 82);
+            this.resultBox.Multiline = true;
+            this.resultBox.Name = "resultBox";
+            this.resultBox.Size = new System.Drawing.Size(251, 276);
+            this.resultBox.TabIndex = 4;
             // 
-            // button3
+            // button4
             // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(146, 88);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(252, 29);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Неверно";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(147, 123);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(251, 188);
-            this.textBox1.TabIndex = 4;
+            this.button4.Location = new System.Drawing.Point(147, 47);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(252, 29);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "Неверно";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.WrongError);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(410, 323);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.ClientSize = new System.Drawing.Size(410, 370);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.resultBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -107,9 +95,8 @@ namespace NeurowebNumbers
 
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox resultBox;
+        private System.Windows.Forms.Button button4;
     }
 }
 

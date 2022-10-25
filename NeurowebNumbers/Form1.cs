@@ -12,28 +12,60 @@ namespace NeurowebNumbers
 {
     public partial class Form1 : Form
     {
-        private Neuron neuron = new Neuron(5);
+        private Neuron _neuron;
+        private List<double> _inputs = new();
 
         public Form1()
         {
             InitializeComponent();
+            _neuron = new(_inputs, 15, 9);
         }
 
         public void LoadPicture(object sender, EventArgs e)
         {
-            using (OpenFileDialog opf = new OpenFileDialog())
+            _inputs.Clear();
+            resultBox.Clear();
+            Bitmap originalPicture;
+            using (OpenFileDialog opf = new())
             {
                 opf.Title = "Выбрать картинку";
                 opf.Filter = "bmp files (*.bmp)|*.bmp";
                 if (opf.ShowDialog() == DialogResult.Cancel) return;
-                Bitmap originalPicture = new Bitmap(opf.FileName);
+                originalPicture = new Bitmap(opf.FileName);
                 Bitmap picture = new Bitmap(Image.FromHbitmap(originalPicture.GetHbitmap()), pictureBox.Width, pictureBox.Height);
                 pictureBox.Image = picture;
             }
+
+            for (int i = 0; i < originalPicture.Height; i++)
+            {
+                for (int j = 0; j < originalPicture.Width; j++)
+                {
+                    double pixel = originalPicture.GetPixel(j, i).R;
+                    if (pixel >= 250) pixel = 0;
+                    else pixel = 1;
+
+                    _inputs.Add(pixel);
+                    resultBox.Text += $"{pixel} ";
+                }
+                resultBox.Text += Environment.NewLine;
+            }
+
+            Recognize();
         }
 
-        public void DivineNumber(object sender, EventArgs e)
+        public void WrongError(object sender, EventArgs e)
         {
+            if (_neuron.ActivationFunction()) _neuron.FeedForward(-1);
+            else _neuron.FeedForward(1);
+            resultBox.Clear();
+            Recognize();
+        }
+
+        public void Recognize()
+        {
+            _neuron.Summator();
+            bool res = _neuron.ActivationFunction();
+            resultBox.Text += Environment.NewLine + $"Result = {res}, Sum = {_neuron.Sum}";
         }
     }
 }

@@ -10,38 +10,33 @@ namespace NeurowebNumbers
     {
         private readonly double _limit;
         private List<double> _inputs;
-        private List<double> _weights = new List<double>();
-        
-        public Neuron(double limit)
+        private List<double> _weights = new();
+        public double Sum { get; private set; } = 0;
+
+        public Neuron(List<double>inputs, int signalsCount, double limit)
         {
             _limit = limit;
-        }
-
-        public void SaveInputs(List<double> inputs)
-        {
-            Random rnd = new();
             _inputs = inputs;
-            for (int i = 0; i < _inputs.Count; i++) _weights.Add(rnd.NextDouble());
+            for (int i = 0; i < signalsCount; i++) _weights.Add(0.0d);
         }
 
-        public double Summator()
+        public void Summator()
         {
-            double sum = 0.0d;
+            Sum = 0.0d;
             for (int i = 0; i < _inputs.Count; i++)
             {
-                sum += _inputs[i] * _weights[i];
+                Sum += _inputs[i] * _weights[i];
             }
-            return sum;
         }
 
-        public bool ActivationFunction(double signal)
+        public bool ActivationFunction()
         {
-            return signal >= _limit;
+            return Sum >= _limit;
         }
 
         public void FeedForward(double errorValue)
         {
-            for (int i = 0; i < _inputs.Count; i++) _weights[i] = _weights[i] + errorValue * _inputs[i];
+            for (int i = 0; i < _inputs.Count; i++) _weights[i] += errorValue * _inputs[i];
         }
     }
 }
