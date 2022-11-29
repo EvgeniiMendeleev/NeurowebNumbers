@@ -16,9 +16,10 @@ namespace NeurowebNumbers
 
         public Neuron(List<double>inputs, int signalsCount, double limit)
         {
+            Random numbersGenerator = new Random();
             _limit = limit;
             _inputs = inputs;
-            for (int i = 0; i < signalsCount; i++) _weights.Add(0.0d);
+            for (int i = 0; i < signalsCount; i++) _weights.Add(numbersGenerator.NextDouble());
         }
 
         public void ShowWeights(TextBox textBox)
