@@ -1,68 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace NeurowebNumbers
 {
+    class Signal
+    {
+        public double Input { get; set; }
+        public double Weight { get; set; }
+
+        public Signal(double input, double weight)
+        {
+            Input = input;
+            Weight = weight;
+        }
+    }
+
     class Neuron
     {
-        private readonly double _limit;
-        private List<double> _inputs;
-        private List<double> _weights = new();
-        public double Sum { get; private set; } = 0;
+        private List<Signal> _inputSignals;
+        public readonly Signal _outputSignal;
 
-        public Neuron(List<double>inputs, int signalsCount, double limit)
+        public Neuron(List<double>inputs, int signalsCount)
+        {
+            _inputSignals = new();
+            Random numbersGenerator = new Random();
+            for (int i = 0; i < signalsCount; i++) _inputSignals.Add(new Signal(inputs[i], numbersGenerator.NextDouble()));
+            _outputSignal = new Signal(0.0d, numbersGenerator.NextDouble());
+        }
+
+        public Neuron(List<Signal> inputsSignals)
         {
             Random numbersGenerator = new Random();
-            _limit = limit;
-            _inputs = inputs;
-            for (int i = 0; i < signalsCount; i++) _weights.Add(numbersGenerator.NextDouble());
+            _inputSignals = new(inputsSignals);
+            _outputSignal = new Signal(0.0d, numbersGenerator.NextDouble());
         }
 
-        public void ShowWeights(TextBox textBox)
+        public void Recognize()
         {
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    textBox.Text += $"{_weights[i * 3 + j]} ";
-                }
-                textBox.Text += Environment.NewLine;
-            }
+            double sum = _inputSignals.Sum(signal => signal.Input * signal.Weight);
+            _outputSignal.Input = 1.0d / (1.0d + Math.Exp(-sum));
         }
 
-        public void ShowInputs(TextBox textBox)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    textBox.Text += $"{_inputs[i * 3 + j]} ";
-                }
-                textBox.Text += Environment.NewLine;
-            }
-        }
-
-        public void Summator()
-        {
-            Sum = 0.0d;
-            for (int i = 0; i < _inputs.Count; i++)
-            {
-                Sum += _inputs[i] * _weights[i];
-            }
-        }
-
-        public bool ActivationFunction()
-        {
-            return Sum >= _limit;
-        }
-
-        public void FeedForward(double errorValue)
-        {
-            for (int i = 0; i < _inputs.Count; i++) _weights[i] += errorValue * _inputs[i];
-        }
+        public void FeedForward(double errorValue) => _inputSignals.ForEach(signal => signal.Weight += errorValue * signal.Input);
     }
 }

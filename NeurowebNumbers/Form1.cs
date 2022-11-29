@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NeurowebNumbers
 {
     public partial class Form1 : Form
     {
-        private Neuron _neuron;
+        private const int NEURONS_COUNT = 10;
+        private Neuron[] _neurons = new Neuron[NEURONS_COUNT];
         private List<double> _inputs = new();
 
         public Form1()
         {
             InitializeComponent();
-            _neuron = new(_inputs, 15, 9);
+            for (int i = 0; i < NEURONS_COUNT; i++) _neurons[i] = new Neuron(_inputs, 15);
         }
 
         public void LoadPicture(object sender, EventArgs e)
@@ -49,20 +51,10 @@ namespace NeurowebNumbers
 
         public void WrongError(object sender, EventArgs e)
         {
-            if (_neuron.ActivationFunction()) _neuron.FeedForward(-1);
-            else _neuron.FeedForward(1);
-            resultBox.Clear();
-            _neuron.ShowInputs(resultBox);
-            Recognize();
         }
 
         public void Recognize()
         {
-            _neuron.Summator();
-            bool res = _neuron.ActivationFunction();
-            resultBox.Text += Environment.NewLine + $"Result = {res}, Sum = {_neuron.Sum}";
-            weightsBox.Clear();
-            _neuron.ShowWeights(weightsBox);
         }
     }
 }
