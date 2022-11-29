@@ -6,42 +6,40 @@ namespace NeurowebNumbers
 {
     class Signal
     {
-        public double Input { get; set; }
+        public double Value { get; set; }
         public double Weight { get; set; }
 
-        public Signal(double input, double weight)
+        public Signal(double value, double weight)
         {
-            Input = input;
+            Value = value;
             Weight = weight;
         }
     }
 
     class Neuron
     {
-        private List<Signal> _inputSignals;
-        public readonly Signal _outputSignal;
+        private List<Signal> _inputSignals = new();
+        public readonly Signal OutputSignal;
 
-        public Neuron(List<double>inputs, int signalsCount)
+        public Neuron(int signalsCount)
         {
-            _inputSignals = new();
             Random numbersGenerator = new Random();
-            for (int i = 0; i < signalsCount; i++) _inputSignals.Add(new Signal(inputs[i], numbersGenerator.NextDouble()));
-            _outputSignal = new Signal(0.0d, numbersGenerator.NextDouble());
+            for (int i = 0; i < signalsCount; i++) _inputSignals.Add(new Signal(0.0d, numbersGenerator.NextDouble()));
+            OutputSignal = new Signal(0.0d, numbersGenerator.NextDouble());
         }
 
-        public Neuron(List<Signal> inputsSignals)
+        public void SetInputSignals(List<Signal> signals)
         {
-            Random numbersGenerator = new Random();
-            _inputSignals = new(inputsSignals);
-            _outputSignal = new Signal(0.0d, numbersGenerator.NextDouble());
+            if (signals.Count != _inputSignals.Count) throw new Exception("Количество входных сигналов отличается от количества принимающих сигналов в нейроне!");
+
         }
 
         public void Recognize()
         {
-            double sum = _inputSignals.Sum(signal => signal.Input * signal.Weight);
-            _outputSignal.Input = 1.0d / (1.0d + Math.Exp(-sum));
+            double sum = _inputSignals.Sum(signal => signal.Value * signal.Weight);
+            OutputSignal.Value = 1.0d / (1.0d + Math.Exp(-sum));
         }
 
-        public void FeedForward(double errorValue) => _inputSignals.ForEach(signal => signal.Weight += errorValue * signal.Input);
+        public void FeedForward(double errorValue) => _inputSignals.ForEach(signal => signal.Weight += errorValue * signal.Value);
     }
 }

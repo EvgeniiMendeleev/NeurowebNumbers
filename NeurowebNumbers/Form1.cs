@@ -55,6 +55,19 @@ namespace NeurowebNumbers
 
         public void Recognize()
         {
+            foreach (Neuron neuron in _neurons) neuron.Recognize();
+
+            double maxOutputSignalValue = 0.0d;
+            int neuronNumber = 0;
+            for (int i = 0; i < _neurons.Count(); i++)
+            {
+                if (_neurons[i].OutputSignal.Value >= maxOutputSignalValue)
+                {
+                    maxOutputSignalValue = _neurons[i].OutputSignal.Value;
+                    neuronNumber = i;
+                }
+            }
+            resultBox.Text += Environment.NewLine + $"Нейрон {neuronNumber}: с вероятностью {Math.Round(_neurons[neuronNumber].OutputSignal.Value, 4)} это цифра {neuronNumber + 1}";
         }
     }
 }
