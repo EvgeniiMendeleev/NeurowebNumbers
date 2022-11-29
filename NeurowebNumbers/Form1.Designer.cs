@@ -33,6 +33,8 @@ namespace NeurowebNumbers
             this.button1 = new System.Windows.Forms.Button();
             this.resultBox = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
+            this.weightsBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,11 +74,30 @@ namespace NeurowebNumbers
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.WrongError);
             // 
+            // weightsBox
+            // 
+            this.weightsBox.Location = new System.Drawing.Point(3, 188);
+            this.weightsBox.Multiline = true;
+            this.weightsBox.Name = "weightsBox";
+            this.weightsBox.Size = new System.Drawing.Size(137, 170);
+            this.weightsBox.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 165);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 20);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Веса";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(410, 370);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.weightsBox);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.resultBox);
             this.Controls.Add(this.button1);
@@ -84,7 +105,7 @@ namespace NeurowebNumbers
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
-            this.Text = "Нейрон";
+            this.Text = "Нейрон (Менделеев Е.А. 1094)";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -97,6 +118,8 @@ namespace NeurowebNumbers
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox resultBox;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TextBox weightsBox;
+        private System.Windows.Forms.Label label1;
     }
 }
 

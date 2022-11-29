@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NeurowebNumbers
 {
@@ -18,6 +19,30 @@ namespace NeurowebNumbers
             _limit = limit;
             _inputs = inputs;
             for (int i = 0; i < signalsCount; i++) _weights.Add(0.0d);
+        }
+
+        public void ShowWeights(TextBox textBox)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    textBox.Text += $"{_weights[i * 3 + j]} ";
+                }
+                textBox.Text += Environment.NewLine;
+            }
+        }
+
+        public void ShowInputs(TextBox textBox)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    textBox.Text += $"{_inputs[i * 3 + j]} ";
+                }
+                textBox.Text += Environment.NewLine;
+            }
         }
 
         public void Summator()
