@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeurowebNumbers
@@ -44,6 +49,7 @@ namespace NeurowebNumbers
                 }
                 resultBox.Text += Environment.NewLine;
             }
+
             Recognize();
         }
 
@@ -52,7 +58,6 @@ namespace NeurowebNumbers
             if (_neuron.ActivationFunction()) _neuron.FeedForward(-1);
             else _neuron.FeedForward(1);
             resultBox.Clear();
-            _neuron.ShowInputs(resultBox);
             Recognize();
         }
 
@@ -61,8 +66,6 @@ namespace NeurowebNumbers
             _neuron.Summator();
             bool res = _neuron.ActivationFunction();
             resultBox.Text += Environment.NewLine + $"Result = {res}, Sum = {_neuron.Sum}";
-            weightsBox.Clear();
-            _neuron.ShowWeights(weightsBox);
         }
     }
 }
