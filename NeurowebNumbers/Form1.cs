@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeurowebNumbers
 {
     public partial class Form1 : Form
     {
-        private Neuron _neuron;
-        private List<double> _inputs = new();
+        private List<Neuron> _neurons = new();
 
         public Form1()
         {
             InitializeComponent();
-            _neuron = new(_inputs, 15, 9);
+            for (int i = 0; i < 10; i++) _neurons.Add(new(15, 9));
         }
 
         public void LoadPicture(object sender, EventArgs e)
-        {
-            _inputs.Clear();
+        {   
             resultBox.Clear();
             Bitmap originalPicture;
             using (OpenFileDialog opf = new())
@@ -36,6 +31,7 @@ namespace NeurowebNumbers
                 pictureBox.Image = picture;
             }
 
+            List<double> inputs = new();
             for (int i = 0; i < originalPicture.Height; i++)
             {
                 for (int j = 0; j < originalPicture.Width; j++)
@@ -44,28 +40,34 @@ namespace NeurowebNumbers
                     if (pixel >= 250) pixel = 0;
                     else pixel = 1;
 
-                    _inputs.Add(pixel);
+                    inputs.Add(pixel);
                     resultBox.Text += $"{pixel} ";
                 }
                 resultBox.Text += Environment.NewLine;
             }
 
+            _neurons.ForEach(neuron => neuron.SetInput(inputs));
             Recognize();
+        }
+
+        private void Recognize()
+        {
+            _neurons.ForEach(neuron => neuron.Summator());
+            List<double> neuronsResult = _neurons.Select(neuron => neuron.Sum).ToList();
+
+            double sum = neuronsResult.Sum();
+            for (int i = 0; i < neuronsResult.Count; i++) neuronsResult[i] /= sum;
+
+            double maxValue = neuronsResult.Max();
+            double maxValuePosition = neuronsResult.IndexOf(maxValue);
+
+            resultBox.Text += Environment.NewLine + $"Нейрон {maxValuePosition + 1}: с вероятностью {Math.Round(maxValue, 4)} это цифра {maxValuePosition + 1}";
         }
 
         public void WrongError(object sender, EventArgs e)
         {
-            if (_neuron.ActivationFunction()) _neuron.FeedForward(-1);
-            else _neuron.FeedForward(1);
             resultBox.Clear();
             Recognize();
-        }
-
-        public void Recognize()
-        {
-            _neuron.Summator();
-            bool res = _neuron.ActivationFunction();
-            resultBox.Text += Environment.NewLine + $"Result = {res}, Sum = {_neuron.Sum}";
         }
     }
 }
