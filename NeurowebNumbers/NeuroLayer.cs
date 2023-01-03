@@ -1,57 +1,53 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace NeuroWeb.Layer
 {
     class NeuroLayer
     {
-        public delegate float ActivationFuncHandler(int k, Matrix<float> signals);
-        public ActivationFuncHandler ActivationFunc;
+        private Vector<float> inputSignals;
+        private Matrix<float> weights;
+        private Vector<float> outputSignals;
 
-        private Matrix<float> _inputSignals;
-        private Matrix<float> _outputSignals;
-        private Matrix<float> _weights;
-
-        public NeuroLayer(int inputSignalsCount, int outputSignalsCount) => _weights = Matrix<float>.Build.Random(inputSignalsCount, outputSignalsCount);
-
-        public void SetInputSignals(float[] inputSignals) => _inputSignals = Matrix<float>.Build.Dense(1, _weights.RowCount, inputSignals);
-
-        public void CalculateOutputSignals()
+        public NeuroLayer(int inputSignalsCount, int outputSignalsCount)
         {
-            _outputSignals = _inputSignals * _weights;
-            for (int j = 0; j < _outputSignals.ColumnCount; j++) _outputSignals[0, j] = ActivationFunc(j, _outputSignals);
+            inputSignals = Vector<float>.Build.Dense(inputSignalsCount);
+            weights = Matrix<float>.Build.Random(inputSignalsCount, outputSignalsCount);
         }
 
-        public void Train(Matrix<float> errors, float learningSpeed)
+        public void SetInputSignals(float[] inputs)
         {
-            for (int i = 0; i < _weights.RowCount; i++)
-            {
-                for (int j = 0; j < _weights.ColumnCount; j++) _weights[i, j] -= learningSpeed * errors[i, j];
-            }
+            if (inputSignals.Count != inputs.Length) throw new Exception("Число входных данных не совпадает с числом входов нейронной сети!");
+            for (int i = 0; i < inputSignals.Count; i++) inputSignals[i] = inputs[i];
         }
 
-        public Matrix<float> GetErrors(float[] y_train)
+        public void CalculateOutputSignals() => outputSignals = inputSignals * weights;
+
+        public (int, float) GetMaxOutputValue()
         {
-            Matrix<float> errors = Matrix<float>.Build.Random(_weights.RowCount, _weights.ColumnCount);
-            for (int i = 0; i < errors.RowCount; i++)
-            {
-                for (int j = 0; j < errors.ColumnCount; j++) errors[i, j] = (_outputSignals[0, j] - y_train[j]) * _inputSignals[0, i];
-            }
-            return errors;
+            float maxProbability = outputSignals.Max();
+            int maxProbabilityPosition = outputSignals.MaximumIndex();
+            return (maxProbabilityPosition, maxProbability);
         }
 
-        public (float, int) GetMaxFromOutputSignals()
+        //NormalizeOutputSignals - программмная реализации функции SoftMax.
+        public void NormalizeOutputSignals()
         {
-            float maxValue = 0.0f;
-            int neuronNumber = 0;
-            for (int j = 0; j < _outputSignals.ColumnCount; j++)
+            float sum = outputSignals.Sum(signal => MathF.Exp(signal));
+            for (int i = 0; i < outputSignals.Count; i++) outputSignals[i] = MathF.Exp(outputSignals[i]) / sum;
+        }
+
+        public void RecalculateWeights(float[] answers)
+        {
+            if (answers.Length != outputSignals.Count) throw new Exception("Число выходов не совпадает с числом правильных ответов!");
+
+            for (int j = 0; j < weights.ColumnCount; j++)
             {
-                if (maxValue < _outputSignals[0, j])
-                { 
-                    maxValue = _outputSignals[0, j];
-                    neuronNumber = j;
-                }
+                float error = outputSignals[j] - answers[j];
+                float gradient = error * outputSignals[j] * (1.0f - outputSignals[j]); //Умножение ошибки (error) на производную функции активации (ActivationFunc).
+                for (int i = 0; i < weights.RowCount; i++) weights[i, j] -= 0.9f * gradient * inputSignals[i];
             }
-            return (maxValue, neuronNumber);
         }
     }
 }
