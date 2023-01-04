@@ -45,7 +45,7 @@ namespace NeuroWeb.Layer
             for (int j = 0; j < weights.ColumnCount; j++)
             {
                 float error = outputSignals[j] - answers[j];
-                float gradient = error * outputSignals[j] * (1.0f - outputSignals[j]); //Умножение ошибки (error) на производную функции активации (ActivationFunc).
+                float gradient = error / MathF.Pow(MathF.Cosh(outputSignals[j]), 2); //Умножение ошибки (error) на производную функции активации
                 for (int i = 0; i < weights.RowCount; i++) weights[i, j] -= 0.9f * gradient * inputSignals[i];
             }
         }
